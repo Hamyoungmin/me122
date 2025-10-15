@@ -20,114 +20,56 @@ export default function Home() {
           flexDirection: 'column',
           alignItems: 'flex-start',
           padding: '0px',
-          gap: '40px',
+          gap: '24px',
           position: 'absolute',
           width: '844px',
-          height: '289px',
+          height: '173px',
           left: '79px',
           top: '212px',
           zIndex: 100,
         }}
       >
-        {/* Page title */}
-        <div
+        <h1
           style={{
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'flex-start',
-            padding: '0px',
-            gap: '24px',
             width: '844px',
-            height: '173px',
+            height: '77px',
+            fontFamily: 'Inter',
+            fontStyle: 'normal',
+            fontWeight: 700,
+            fontSize: '64px',
+            lineHeight: '77px',
+            letterSpacing: '-0.02em',
+            color: '#000000',
+            margin: 0,
             flex: 'none',
             order: 0,
             alignSelf: 'stretch',
             flexGrow: 0,
           }}
         >
-          <h1
-            style={{
-              width: '844px',
-              height: '77px',
-              fontFamily: 'Inter',
-              fontStyle: 'normal',
-              fontWeight: 700,
-              fontSize: '64px',
-              lineHeight: '77px',
-              letterSpacing: '-0.02em',
-              color: '#000000',
-              margin: 0,
-              flex: 'none',
-              order: 0,
-              alignSelf: 'stretch',
-              flexGrow: 0,
-            }}
-          >
-            랜딩 페이지 제목
-          </h1>
-          <p
-            style={{
-              width: '844px',
-              height: '72px',
-              fontFamily: 'Inter',
-              fontStyle: 'normal',
-              fontWeight: 400,
-              fontSize: '24px',
-              lineHeight: '150%',
-              display: 'flex',
-              alignItems: 'center',
-              color: 'rgba(0, 0, 0, 0.75)',
-              margin: 0,
-              flex: 'none',
-              order: 1,
-              alignSelf: 'stretch',
-              flexGrow: 0,
-            }}
-          >
-            상황을 설명하고, 웹사이트에 대한 추가 정보를 공유하며, 사람들이 계속 스크롤하도록 흥미를 유발하는 부제목.
-          </p>
-        </div>
-
-        {/* Button */}
-        <button
+          랜딩 페이지 제목
+        </h1>
+        <p
           style={{
+            width: '844px',
+            height: '72px',
+            fontFamily: 'Inter',
+            fontStyle: 'normal',
+            fontWeight: 400,
+            fontSize: '24px',
+            lineHeight: '150%',
             display: 'flex',
-            flexDirection: 'row',
             alignItems: 'center',
-            padding: '20px 32px',
-            gap: '8px',
-            width: '109px',
-            height: '76px',
-            background: '#000000',
-            boxShadow: '0px 1px 2px rgba(0, 0, 0, 0.05)',
-            borderRadius: '8px',
-            border: 'none',
-            cursor: 'pointer',
+            color: 'rgba(0, 0, 0, 0.75)',
+            margin: 0,
             flex: 'none',
             order: 1,
+            alignSelf: 'stretch',
             flexGrow: 0,
           }}
         >
-          <span
-            style={{
-              width: '45px',
-              height: '36px',
-              fontFamily: 'Inter',
-              fontStyle: 'normal',
-              fontWeight: 500,
-              fontSize: '24px',
-              lineHeight: '150%',
-              display: 'flex',
-              alignItems: 'center',
-              color: '#FFFFFF',
-              flex: 'none',
-              order: 0,
-              flexGrow: 0,
-            }}
-          >
-            버튼
-          </span>
-        </button>
+          상황을 설명하고, 웹사이트에 대한 추가 정보를 공유하며, 사람들이 계속 스크롤하도록 흥미를 유발하는 부제목.
+        </p>
       </div>
 
       {/* Hero Image */}

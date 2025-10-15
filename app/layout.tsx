@@ -8,7 +8,7 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "사이트 이름",
+  title: "리스트몰",
   description: "쇼핑 사이트 설명",
 };
 
