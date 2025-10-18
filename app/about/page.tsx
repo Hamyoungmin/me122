@@ -105,11 +105,22 @@ export default function About() {
           height: '657px',
           right: '85px',
           top: '244px',
-          background: 'url(/Image%20(24).png) center/cover, #F7F7F7',
+          overflow: 'hidden',
           border: '1px solid #000000',
           borderRadius: '8px',
+          backgroundColor: '#F7F7F7',
         }}
-      />
+      >
+        <img 
+          src="/Image.png" 
+          alt="About"
+          style={{
+            width: '100%',
+            height: '100%',
+            objectFit: 'cover',
+          }}
+        />
+      </div>
 
       {/* Heading */}
       <div
