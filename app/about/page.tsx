@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { createClient } from '@supabase/supabase-js';
 import Navigation from '../components/Navigation';
 import Footer from '../components/Footer';
+import AuthButton from '../components/AuthButton';
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -573,6 +574,7 @@ export default function About() {
       </form>
 
       <Footer />
+      <AuthButton />
     </div>
   );
 }

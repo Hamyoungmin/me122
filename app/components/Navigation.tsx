@@ -80,7 +80,7 @@ export default function Navigation({ variant = 'light' }: NavigationProps) {
             cursor: 'pointer',
           }}
         >
-          Shop
+          Main
         </Link>
 
         <Link
@@ -156,7 +156,7 @@ export default function Navigation({ variant = 'light' }: NavigationProps) {
               color: '#FFFFFF',
             }}
           >
-            Product detail
+            Shop
           </span>
         </Link>
       </div>

@@ -1,5 +1,6 @@
 import Navigation from './components/Navigation';
 import Footer from './components/Footer';
+import AuthButton from './components/AuthButton';
 
 export default function Home() {
   return (
@@ -808,6 +809,7 @@ export default function Home() {
       </div>
 
       <Footer />
+      <AuthButton />
     </div>
   );
 }

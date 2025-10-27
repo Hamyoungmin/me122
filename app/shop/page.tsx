@@ -2,8 +2,10 @@
 
 import { useEffect, useState } from 'react';
 import { createClient } from '@supabase/supabase-js';
+import Link from 'next/link';
 import Navigation from '../components/Navigation';
 import Footer from '../components/Footer';
+import AuthButton from '../components/AuthButton';
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -547,7 +549,8 @@ export default function Shop() {
           로딩 중...
         </div>
       ) : featuredProduct ? (
-        <div
+        <Link
+          href={`/product/${featuredProduct.id}`}
           style={{
             display: 'flex',
             flexDirection: 'column',
@@ -559,6 +562,8 @@ export default function Shop() {
             height: '863px',
             left: '80px',
             top: '1976px',
+            textDecoration: 'none',
+            cursor: 'pointer',
           }}
         >
           <div
@@ -635,7 +640,7 @@ export default function Shop() {
               ${featuredProduct.price}
             </p>
           </div>
-        </div>
+        </Link>
       ) : (
         <div
           style={{
@@ -700,8 +705,9 @@ export default function Shop() {
           </div>
         ) : (
           products.map((product, index) => (
-            <div
+            <Link
               key={product.id}
+              href={`/product/${product.id}`}
               style={{
                 display: 'flex',
                 flexDirection: 'column',
@@ -714,6 +720,8 @@ export default function Shop() {
                 order: index,
                 alignSelf: 'stretch',
                 flexGrow: 1,
+                textDecoration: 'none',
+                cursor: 'pointer',
               }}
             >
               <div
@@ -790,7 +798,7 @@ export default function Shop() {
                   ${product.price}
                 </p>
               </div>
-            </div>
+            </Link>
           ))
         )}
       </div>
@@ -1055,6 +1063,7 @@ export default function Shop() {
       </div>
 
       <Footer />
+      <AuthButton />
     </div>
   );
 }

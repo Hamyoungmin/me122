@@ -1,14 +1,21 @@
 import Link from 'next/link';
 
-export default function Footer() {
+interface FooterProps {
+  variant?: 'default' | 'auth';
+}
+
+export default function Footer({ variant = 'default' }: FooterProps) {
+  const isAuth = variant === 'auth';
+  
   return (
     <footer
       style={{
-        position: 'absolute',
+        position: isAuth ? 'relative' : 'absolute',
         height: '264px',
-        left: 0,
-        right: 0,
-        bottom: 0,
+        left: isAuth ? 'auto' : 0,
+        right: isAuth ? 'auto' : 0,
+        bottom: isAuth ? 'auto' : 0,
+        width: isAuth ? '100%' : 'auto',
         background: '#FFFFFF',
       }}
     >

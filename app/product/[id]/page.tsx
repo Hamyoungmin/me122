@@ -2,9 +2,9 @@
 
 import { useEffect, useState } from 'react';
 import { createClient } from '@supabase/supabase-js';
-import Navigation from '../components/Navigation';
-import Footer from '../components/Footer';
-import AuthButton from '../components/AuthButton';
+import Navigation from '../../components/Navigation';
+import Footer from '../../components/Footer';
+import AuthButton from '../../components/AuthButton';
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -17,40 +17,56 @@ interface Product {
   description: string;
   price: number;
   image_url: string;
+  category: string;
+  featured: boolean;
 }
 
-export default function Product() {
+export default function ProductDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const [mainProduct, setMainProduct] = useState<Product | null>(null);
   const [relatedProducts, setRelatedProducts] = useState<Product[]>([]);
   const [allProducts, setAllProducts] = useState<Product[]>([]);
   const [showAll, setShowAll] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [productId, setProductId] = useState<string>('');
 
   useEffect(() => {
-    loadProducts();
-  }, []);
+    async function initializeParams() {
+      const resolvedParams = await params;
+      setProductId(resolvedParams.id);
+    }
+    initializeParams();
+  }, [params]);
 
-  async function loadProducts() {
+  useEffect(() => {
+    if (productId) {
+      loadProduct();
+    }
+  }, [productId]);
+
+  async function loadProduct() {
     setLoading(true);
     
-    // 메인 상품 1개 가져오기 (가장 최근 상품)
-    const { data: main } = await supabase
+    // 해당 ID의 상품 가져오기
+    const { data: product, error } = await supabase
       .from('products')
       .select('*')
-      .order('created_at', { ascending: false })
-      .limit(1)
+      .eq('id', productId)
       .single();
     
-    // 모든 관련 상품 가져오기
+    if (error) {
+      console.error('Error loading product:', error);
+      setLoading(false);
+      return;
+    }
+    
+    setMainProduct(product);
+    
+    // 모든 관련 상품 가져오기 (현재 상품 제외)
     const { data: all } = await supabase
       .from('products')
       .select('*')
+      .neq('id', productId)
       .order('created_at', { ascending: false });
-    
-    // 데이터가 있으면 업데이트
-    if (main) {
-      setMainProduct(main);
-    }
     
     if (all && all.length > 0) {
       setAllProducts(all);
@@ -101,25 +117,21 @@ export default function Product() {
         }}
       >
         <p style={{ fontFamily: 'Inter', fontSize: '20px', color: '#999999' }}>
-          상품이 없습니다
+          상품을 찾을 수 없습니다
         </p>
       </div>
     );
   }
-
-  // 카드 높이 계산: 이미지(238) + gap(24) + 텍스트(104) + 행간격(32) = 398px
-  const cardRowHeight = 398;
-  const contentHeight = 937 + Math.ceil(relatedProducts.length / 3) * cardRowHeight + 300;
-  const minPageHeight = Math.max(2115, contentHeight);
 
   return (
     <div
       style={{
         position: 'relative',
         width: '1440px',
-        minHeight: `${minPageHeight}px`,
+        minHeight: showAll ? 'auto' : '2115px',
         background: '#FFFFFF',
         margin: '0 auto',
+        paddingBottom: '200px',
       }}
     >
       <Navigation />
@@ -365,7 +377,7 @@ export default function Product() {
               color: '#999999',
             }}
           >
-            상품이 없습니다
+            관련 상품이 없습니다
           </div>
         )}
       </div>
@@ -377,7 +389,7 @@ export default function Product() {
             position: 'absolute',
             left: '50%',
             transform: 'translateX(-50%)',
-            top: `${937 + Math.ceil(6 / 3) * cardRowHeight + 20}px`,
+            top: `${937 + Math.ceil(Math.min(relatedProducts.length, 6) / 3) * 350 + 50}px`,
             zIndex: 10,
           }}
         >
@@ -420,8 +432,11 @@ export default function Product() {
         </div>
       )}
 
-      <Footer />
+      <div style={{ position: 'relative', marginTop: `${showAll ? (937 + Math.ceil(relatedProducts.length / 3) * 350 + 150) : 2000}px` }}>
+        <Footer />
+      </div>
       <AuthButton />
     </div>
   );
 }
+

@@ -13,6 +13,7 @@ const supabase = createClient(
 export default function AddProductPage() {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
+  const [uploading, setUploading] = useState(false);
   const [formData, setFormData] = useState({
     name: '',
     description: '',
@@ -21,6 +22,46 @@ export default function AddProductPage() {
     category: '',
     featured: false,
   });
+
+  async function handleFileUpload(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    // 파일 형식 체크
+    if (!file.type.startsWith('image/')) {
+      alert('이미지 파일만 업로드 가능합니다.');
+      return;
+    }
+
+    setUploading(true);
+
+    try {
+      // 고유한 파일명 생성
+      const fileExt = file.name.split('.').pop();
+      const fileName = `${Date.now()}-${Math.random().toString(36).substring(7)}.${fileExt}`;
+      const filePath = `${fileName}`;
+
+      // Supabase Storage에 업로드
+      const { data, error } = await supabase.storage
+        .from('product-images')
+        .upload(filePath, file);
+
+      if (error) {
+        throw error;
+      }
+
+      // Public URL 가져오기
+      const { data: { publicUrl } } = supabase.storage
+        .from('product-images')
+        .getPublicUrl(filePath);
+
+      setFormData({ ...formData, image_url: publicUrl });
+    } catch (error: any) {
+      alert('업로드 실패: ' + error.message);
+    } finally {
+      setUploading(false);
+    }
+  }
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -106,7 +147,7 @@ export default function AddProductPage() {
             </label>
             <input
               type="text"
-              value={formData.name}
+              value={formData.name || ''}
               onChange={(e) => setFormData({ ...formData, name: e.target.value })}
               required
               style={{
@@ -136,7 +177,7 @@ export default function AddProductPage() {
               설명
             </label>
             <textarea
-              value={formData.description}
+              value={formData.description || ''}
               onChange={(e) => setFormData({ ...formData, description: e.target.value })}
               rows={4}
               style={{
@@ -169,7 +210,7 @@ export default function AddProductPage() {
             <input
               type="number"
               step="0.01"
-              value={formData.price}
+              value={formData.price || ''}
               onChange={(e) => setFormData({ ...formData, price: e.target.value })}
               required
               style={{
@@ -184,7 +225,7 @@ export default function AddProductPage() {
             />
           </div>
 
-          {/* Image URL */}
+          {/* Image Upload */}
           <div style={{ marginBottom: '24px' }}>
             <label
               style={{
@@ -196,13 +237,13 @@ export default function AddProductPage() {
                 marginBottom: '8px',
               }}
             >
-              이미지 URL
+              상품 이미지
             </label>
             <input
-              type="url"
-              value={formData.image_url}
-              onChange={(e) => setFormData({ ...formData, image_url: e.target.value })}
-              placeholder="https://example.com/image.jpg"
+              type="file"
+              accept="image/*"
+              onChange={handleFileUpload}
+              disabled={uploading}
               style={{
                 width: '100%',
                 padding: '12px 16px',
@@ -211,8 +252,19 @@ export default function AddProductPage() {
                 fontFamily: 'Inter',
                 fontSize: '14px',
                 boxSizing: 'border-box',
+                cursor: uploading ? 'not-allowed' : 'pointer',
               }}
             />
+            <p
+              style={{
+                marginTop: '8px',
+                fontFamily: 'Inter',
+                fontSize: '12px',
+                color: '#666666',
+              }}
+            >
+              {uploading ? '업로드 중...' : 'JPG, PNG, GIF, WEBP (용량 제한 없음)'}
+            </p>
             {formData.image_url && (
               <img
                 src={formData.image_url}
@@ -222,6 +274,7 @@ export default function AddProductPage() {
                   maxWidth: '200px',
                   maxHeight: '200px',
                   borderRadius: '8px',
+                  border: '1px solid #E0E0E0',
                 }}
                 onError={(e) => {
                   (e.target as HTMLImageElement).style.display = 'none';
@@ -246,7 +299,7 @@ export default function AddProductPage() {
             </label>
             <input
               type="text"
-              value={formData.category}
+              value={formData.category || ''}
               onChange={(e) => setFormData({ ...formData, category: e.target.value })}
               placeholder="예: 전자제품, 의류, 식품"
               style={{
