@@ -1,7 +1,40 @@
+'use client';
+
+import { useState } from 'react';
+import { createClient } from '@supabase/supabase-js';
 import Navigation from '../components/Navigation';
 import Footer from '../components/Footer';
 
+const supabase = createClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL!,
+  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+);
+
 export default function About() {
+  const [formData, setFormData] = useState({
+    first_name: '',
+    last_name: '',
+    email: '',
+    message: '',
+  });
+  const [loading, setLoading] = useState(false);
+
+  async function handleSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    setLoading(true);
+
+    const { error } = await supabase.from('contacts').insert([formData]);
+
+    setLoading(false);
+
+    if (error) {
+      alert('문의 전송 실패: ' + error.message);
+    } else {
+      alert('문의가 성공적으로 전송되었습니다!');
+      setFormData({ first_name: '', last_name: '', email: '', message: '' });
+    }
+  }
+
   return (
     <div
       style={{
@@ -48,7 +81,7 @@ export default function About() {
             flexGrow: 0,
           }}
         >
-          정보
+          리스트몰 소개
         </h1>
 
         {/* 설명 또는 안내 부제목 */}
@@ -71,7 +104,7 @@ export default function About() {
             flexGrow: 0,
           }}
         >
-          설명 또는 안내 부제목
+          당신의 일상을 특별하게 만드는 프리미엄 쇼핑 경험
         </p>
 
         {/* Paragraph */}
@@ -92,7 +125,9 @@ export default function About() {
             flexGrow: 0,
           }}
         >
-          Paragraph
+          리스트몰은 최고의 품질과 디자인을 갖춘 프리미엄 제품만을 엄선하여 제공합니다. 우리는 고객님의 라이프스타일을 한층 더 업그레이드할 수 있는 특별한 쇼핑 경험을 선사합니다.
+          
+          고객 만족을 최우선으로 생각하며, 빠른 배송과 친절한 고객 서비스를 통해 언제나 신뢰할 수 있는 쇼핑 파트너가 되겠습니다. 리스트몰과 함께 더욱 풍요로운 일상을 만나보세요.
         </p>
       </div>
 
@@ -160,7 +195,8 @@ export default function About() {
       </div>
 
       {/* Form */}
-      <div
+      <form
+        onSubmit={handleSubmit}
         style={{
           display: 'flex',
           flexDirection: 'row',
@@ -232,6 +268,9 @@ export default function About() {
             <input
               type="text"
               placeholder="Label"
+              value={formData.first_name}
+              onChange={(e) => setFormData({ ...formData, first_name: e.target.value })}
+              required
               style={{
                 width: '263px',
                 height: '24px',
@@ -308,6 +347,9 @@ export default function About() {
             <input
               type="text"
               placeholder="Label"
+              value={formData.last_name}
+              onChange={(e) => setFormData({ ...formData, last_name: e.target.value })}
+              required
               style={{
                 width: '265px',
                 height: '24px',
@@ -384,6 +426,9 @@ export default function About() {
             <input
               type="email"
               placeholder="Label"
+              value={formData.email}
+              onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+              required
               style={{
                 width: '594px',
                 height: '24px',
@@ -459,6 +504,9 @@ export default function About() {
           >
             <textarea
               placeholder="Label"
+              value={formData.message}
+              onChange={(e) => setFormData({ ...formData, message: e.target.value })}
+              required
               style={{
                 width: '594px',
                 height: '24px',
@@ -482,6 +530,7 @@ export default function About() {
 
         {/* Button */}
         <button
+          type="submit"
           style={{
             display: 'flex',
             flexDirection: 'row',
@@ -521,7 +570,7 @@ export default function About() {
             제출
           </span>
         </button>
-      </div>
+      </form>
 
       <Footer />
     </div>

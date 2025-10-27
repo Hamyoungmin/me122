@@ -1,7 +1,57 @@
+'use client';
+
+import { useEffect, useState } from 'react';
+import { createClient } from '@supabase/supabase-js';
 import Navigation from '../components/Navigation';
 import Footer from '../components/Footer';
 
+const supabase = createClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL!,
+  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+);
+
+interface Product {
+  id: string;
+  name: string;
+  description: string;
+  price: number;
+  image_url: string;
+  category: string;
+  featured: boolean;
+}
+
 export default function Shop() {
+  const [featuredProduct, setFeaturedProduct] = useState<Product | null>(null);
+  const [products, setProducts] = useState<Product[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    loadProducts();
+  }, []);
+
+  async function loadProducts() {
+    setLoading(true);
+    
+    // 주요 상품 1개 가져오기
+    const { data: featured } = await supabase
+      .from('products')
+      .select('*')
+      .eq('featured', true)
+      .limit(1)
+      .single();
+    
+    // 일반 상품 2개 가져오기
+    const { data: regular } = await supabase
+      .from('products')
+      .select('*')
+      .eq('featured', false)
+      .limit(2);
+    
+    setFeaturedProduct(featured);
+    setProducts(regular || []);
+    setLoading(false);
+  }
+
   return (
     <div
       style={{
@@ -92,7 +142,7 @@ export default function Shop() {
                 flexGrow: 0,
               }}
             >
-              쇼핑 사이트 이름
+              리스트몰
             </h1>
 
             {/* 쇼핑 사이트 설명이 포함된 부제목 */}
@@ -107,6 +157,7 @@ export default function Shop() {
                 lineHeight: '140%',
                 display: 'flex',
                 alignItems: 'center',
+                justifyContent: 'center',
                 textAlign: 'center',
                 color: '#FFFFFF',
                 margin: 0,
@@ -116,7 +167,7 @@ export default function Shop() {
                 flexGrow: 0,
               }}
             >
-              쇼핑 사이트 설명이 포함된 부제목
+              당신의 일상을 채워줄 특별한 쇼핑 경험
             </p>
           </div>
 
@@ -126,9 +177,10 @@ export default function Shop() {
               display: 'flex',
               flexDirection: 'row',
               alignItems: 'center',
+              justifyContent: 'center',
               padding: '20px 32px',
               gap: '8px',
-              width: '109px',
+              minWidth: '160px',
               height: '76px',
               background: '#000000',
               boxShadow: '0px 1px 2px rgba(0, 0, 0, 0.05)',
@@ -150,9 +202,10 @@ export default function Shop() {
                 display: 'flex',
                 alignItems: 'center',
                 color: '#FFFFFF',
+                whiteSpace: 'nowrap',
               }}
             >
-              버튼
+              둘러보기
             </span>
           </button>
         </div>
@@ -204,7 +257,7 @@ export default function Shop() {
             flexGrow: 0,
           }}
         >
-          제목
+          엄선된 프리미엄 상품
         </h2>
 
         <p
@@ -226,7 +279,7 @@ export default function Shop() {
             flexGrow: 0,
           }}
         >
-          이 섹션의 부제목 길이는 원하는 대로 길거나 짧게 입력할 수 있습니다
+          최고의 품질과 디자인을 자랑하는 제품들을 만나보세요
         </p>
 
         {/* Buttons */}
@@ -247,9 +300,10 @@ export default function Shop() {
               display: 'flex',
               flexDirection: 'row',
               alignItems: 'center',
+              justifyContent: 'center',
               padding: '12px 24px',
               gap: '8px',
-              width: '93px',
+              minWidth: '100px',
               height: '60px',
               background: '#000000',
               boxShadow: '0px 1px 2px rgba(0, 0, 0, 0.05)',
@@ -265,9 +319,10 @@ export default function Shop() {
                 fontSize: '24px',
                 lineHeight: '150%',
                 color: '#FFFFFF',
+                whiteSpace: 'nowrap',
               }}
             >
-              버튼
+              구매
             </span>
           </button>
 
@@ -276,9 +331,10 @@ export default function Shop() {
               display: 'flex',
               flexDirection: 'row',
               alignItems: 'center',
+              justifyContent: 'center',
               padding: '12px 24px',
               gap: '8px',
-              width: '143px',
+              minWidth: '180px',
               height: '60px',
               background: '#E6E6E6',
               boxShadow: '0px 1px 2px rgba(0, 0, 0, 0.05)',
@@ -294,9 +350,10 @@ export default function Shop() {
                 fontSize: '24px',
                 lineHeight: '150%',
                 color: '#000000',
+                whiteSpace: 'nowrap',
               }}
             >
-              보조 버튼
+              자세히 보기
             </span>
           </button>
         </div>
@@ -348,7 +405,7 @@ export default function Shop() {
             flexGrow: 0,
           }}
         >
-          제목
+          특별한 혜택
         </h2>
 
         <p
@@ -370,7 +427,7 @@ export default function Shop() {
             flexGrow: 0,
           }}
         >
-          이 섹션의 부제목 길이는 원하는 대로 길거나 짧게 입력할 수 있습니다
+          회원만을 위한 독점 할인과 이벤트를 놓치지 마세요
         </p>
 
         {/* Buttons */}
@@ -391,9 +448,10 @@ export default function Shop() {
               display: 'flex',
               flexDirection: 'row',
               alignItems: 'center',
+              justifyContent: 'center',
               padding: '12px 24px',
               gap: '8px',
-              width: '93px',
+              minWidth: '100px',
               height: '60px',
               background: '#000000',
               boxShadow: '0px 1px 2px rgba(0, 0, 0, 0.05)',
@@ -409,9 +467,10 @@ export default function Shop() {
                 fontSize: '24px',
                 lineHeight: '150%',
                 color: '#FFFFFF',
+                whiteSpace: 'nowrap',
               }}
             >
-              버튼
+              가입
             </span>
           </button>
 
@@ -420,9 +479,10 @@ export default function Shop() {
               display: 'flex',
               flexDirection: 'row',
               alignItems: 'center',
+              justifyContent: 'center',
               padding: '12px 24px',
               gap: '8px',
-              width: '143px',
+              minWidth: '160px',
               height: '60px',
               background: '#E6E6E6',
               boxShadow: '0px 1px 2px rgba(0, 0, 0, 0.05)',
@@ -438,9 +498,10 @@ export default function Shop() {
                 fontSize: '24px',
                 lineHeight: '150%',
                 color: '#000000',
+                whiteSpace: 'nowrap',
               }}
             >
-              보조 버튼
+              혜택 보기
             </span>
           </button>
         </div>
@@ -464,97 +525,135 @@ export default function Shop() {
           margin: 0,
         }}
       >
-        섹션 제목
+        추천 상품
       </h2>
 
       {/* Card big */}
-      <div
-        style={{
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'flex-start',
-          padding: 0,
-          gap: '24px',
-          position: 'absolute',
-          width: '735px',
-          height: '863px',
-          left: '80px',
-          top: '1976px',
-        }}
-      >
+      {loading ? (
         <div
           style={{
+            position: 'absolute',
+            left: '80px',
+            top: '1976px',
             width: '735px',
-            height: '735px',
-            background: "url('/Image%20(25).png') center/cover, #F7F7F7",
-            borderRadius: '8px',
-            flex: 'none',
-            order: 0,
-            alignSelf: 'stretch',
-            flexGrow: 0,
+            height: '863px',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            fontFamily: 'Inter',
+            color: '#999999',
           }}
-        />
-
+        >
+          로딩 중...
+        </div>
+      ) : featuredProduct ? (
         <div
           style={{
             display: 'flex',
             flexDirection: 'column',
-            justifyContent: 'center',
             alignItems: 'flex-start',
             padding: 0,
-            gap: '4px',
+            gap: '24px',
+            position: 'absolute',
             width: '735px',
-            height: '104px',
-            flex: 'none',
-            order: 1,
-            alignSelf: 'stretch',
-            flexGrow: 0,
+            height: '863px',
+            left: '80px',
+            top: '1976px',
           }}
         >
-          <h3
+          <div
             style={{
               width: '735px',
-              height: '36px',
-              fontFamily: 'Inter',
-              fontWeight: 500,
-              fontSize: '24px',
-              lineHeight: '150%',
-              color: '#000000',
-              margin: 0,
+              height: '735px',
+              background: featuredProduct.image_url 
+                ? `url('${featuredProduct.image_url}') center/cover, #F7F7F7`
+                : '#F7F7F7',
+              borderRadius: '8px',
+              flex: 'none',
+              order: 0,
+              alignSelf: 'stretch',
+              flexGrow: 0,
             }}
-          >
-            주요 제품
-          </h3>
-          <p
+          />
+
+          <div
             style={{
+              display: 'flex',
+              flexDirection: 'column',
+              justifyContent: 'center',
+              alignItems: 'flex-start',
+              padding: 0,
+              gap: '4px',
               width: '735px',
-              height: '30px',
-              fontFamily: 'Inter',
-              fontWeight: 400,
-              fontSize: '20px',
-              lineHeight: '150%',
-              color: '#828282',
-              margin: 0,
+              height: '104px',
+              flex: 'none',
+              order: 1,
+              alignSelf: 'stretch',
+              flexGrow: 0,
             }}
           >
-            대표 제품 설명
-          </p>
-          <p
-            style={{
-              width: '735px',
-              height: '30px',
-              fontFamily: 'Inter',
-              fontWeight: 500,
-              fontSize: '20px',
-              lineHeight: '150%',
-              color: '#000000',
-              margin: 0,
-            }}
-          >
-            $10.99
-          </p>
+            <h3
+              style={{
+                width: '735px',
+                height: '36px',
+                fontFamily: 'Inter',
+                fontWeight: 500,
+                fontSize: '24px',
+                lineHeight: '150%',
+                color: '#000000',
+                margin: 0,
+              }}
+            >
+              {featuredProduct.name}
+            </h3>
+            <p
+              style={{
+                width: '735px',
+                height: '30px',
+                fontFamily: 'Inter',
+                fontWeight: 400,
+                fontSize: '20px',
+                lineHeight: '150%',
+                color: '#828282',
+                margin: 0,
+              }}
+            >
+              {featuredProduct.description || '대표 제품 설명'}
+            </p>
+            <p
+              style={{
+                width: '735px',
+                height: '30px',
+                fontFamily: 'Inter',
+                fontWeight: 500,
+                fontSize: '20px',
+                lineHeight: '150%',
+                color: '#000000',
+                margin: 0,
+              }}
+            >
+              ${featuredProduct.price}
+            </p>
+          </div>
         </div>
-      </div>
+      ) : (
+        <div
+          style={{
+            position: 'absolute',
+            left: '80px',
+            top: '1976px',
+            width: '735px',
+            height: '863px',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            fontFamily: 'Inter',
+            color: '#999999',
+          }}
+        >
+          주요 상품이 없습니다
+        </div>
+      )}
 
       {/* Card list */}
       <div
@@ -571,207 +670,173 @@ export default function Shop() {
           top: '1976px',
         }}
       >
-        {/* Card 1 */}
-        <div
-          style={{
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'flex-start',
-            padding: 0,
-            gap: '24px',
-            width: '515px',
-            height: '411.5px',
-            flex: 'none',
-            order: 0,
-            alignSelf: 'stretch',
-            flexGrow: 1,
-          }}
-        >
+        {loading ? (
           <div
             style={{
               width: '515px',
-              height: '283.5px',
-              background: "url('/Image%20(10).png') center/cover, #F7F7F7",
-              borderRadius: '8px',
-              flex: 'none',
-              order: 0,
-              alignSelf: 'stretch',
-              flexGrow: 1,
-            }}
-          />
-
-          <div
-            style={{
+              height: '863px',
               display: 'flex',
-              flexDirection: 'column',
+              alignItems: 'center',
               justifyContent: 'center',
-              alignItems: 'flex-start',
-              padding: 0,
-              gap: '4px',
-              width: '515px',
-              height: '104px',
-              flex: 'none',
-              order: 1,
-              alignSelf: 'stretch',
-              flexGrow: 0,
+              fontFamily: 'Inter',
+              color: '#999999',
             }}
           >
-            <h3
-              style={{
-                width: '515px',
-                height: '36px',
-                fontFamily: 'Inter',
-                fontWeight: 500,
-                fontSize: '24px',
-                lineHeight: '150%',
-                color: '#000000',
-                margin: 0,
-              }}
-            >
-              제품
-            </h3>
-            <p
-              style={{
-                width: '515px',
-                height: '30px',
-                fontFamily: 'Inter',
-                fontWeight: 400,
-                fontSize: '20px',
-                lineHeight: '150%',
-                color: '#828282',
-                margin: 0,
-              }}
-            >
-              상단 제품 설명
-            </p>
-            <p
-              style={{
-                width: '515px',
-                height: '30px',
-                fontFamily: 'Inter',
-                fontWeight: 500,
-                fontSize: '20px',
-                lineHeight: '150%',
-                color: '#000000',
-                margin: 0,
-              }}
-            >
-              $10.99
-            </p>
+            로딩 중...
           </div>
-        </div>
-
-        {/* Card 2 */}
-        <div
-          style={{
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'flex-start',
-            padding: 0,
-            gap: '24px',
-            width: '515px',
-            height: '411.5px',
-            flex: 'none',
-            order: 1,
-            alignSelf: 'stretch',
-            flexGrow: 1,
-          }}
-        >
+        ) : products.length === 0 ? (
           <div
             style={{
               width: '515px',
-              height: '283.5px',
-              background: "url('/Image%20(11).png') center/cover, #F7F7F7",
-              borderRadius: '8px',
-              flex: 'none',
-              order: 0,
-              alignSelf: 'stretch',
-              flexGrow: 1,
-            }}
-          />
-
-          <div
-            style={{
+              height: '863px',
               display: 'flex',
-              flexDirection: 'column',
+              alignItems: 'center',
               justifyContent: 'center',
-              alignItems: 'flex-start',
-              padding: 0,
-              gap: '4px',
-              width: '515px',
-              height: '104px',
-              flex: 'none',
-              order: 1,
-              alignSelf: 'stretch',
-              flexGrow: 0,
+              fontFamily: 'Inter',
+              color: '#999999',
             }}
           >
-            <h3
-              style={{
-                width: '515px',
-                height: '36px',
-                fontFamily: 'Inter',
-                fontWeight: 500,
-                fontSize: '24px',
-                lineHeight: '150%',
-                color: '#000000',
-                margin: 0,
-              }}
-            >
-              제품
-            </h3>
-            <p
-              style={{
-                width: '515px',
-                height: '30px',
-                fontFamily: 'Inter',
-                fontWeight: 400,
-                fontSize: '20px',
-                lineHeight: '150%',
-                color: '#828282',
-                margin: 0,
-              }}
-            >
-              하단 제품 설명
-            </p>
-            <p
-              style={{
-                width: '515px',
-                height: '30px',
-                fontFamily: 'Inter',
-                fontWeight: 500,
-                fontSize: '20px',
-                lineHeight: '150%',
-                color: '#000000',
-                margin: 0,
-              }}
-            >
-              $10.99
-            </p>
+            상품이 없습니다
           </div>
-        </div>
+        ) : (
+          products.map((product, index) => (
+            <div
+              key={product.id}
+              style={{
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'flex-start',
+                padding: 0,
+                gap: '24px',
+                width: '515px',
+                height: '411.5px',
+                flex: 'none',
+                order: index,
+                alignSelf: 'stretch',
+                flexGrow: 1,
+              }}
+            >
+              <div
+                style={{
+                  width: '515px',
+                  height: '283.5px',
+                  background: product.image_url
+                    ? `url('${product.image_url}') center/cover, #F7F7F7`
+                    : '#F7F7F7',
+                  borderRadius: '8px',
+                  flex: 'none',
+                  order: 0,
+                  alignSelf: 'stretch',
+                  flexGrow: 1,
+                }}
+              />
+
+              <div
+                style={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  justifyContent: 'center',
+                  alignItems: 'flex-start',
+                  padding: 0,
+                  gap: '4px',
+                  width: '515px',
+                  height: '104px',
+                  flex: 'none',
+                  order: 1,
+                  alignSelf: 'stretch',
+                  flexGrow: 0,
+                }}
+              >
+                <h3
+                  style={{
+                    width: '515px',
+                    height: '36px',
+                    fontFamily: 'Inter',
+                    fontWeight: 500,
+                    fontSize: '24px',
+                    lineHeight: '150%',
+                    color: '#000000',
+                    margin: 0,
+                  }}
+                >
+                  {product.name}
+                </h3>
+                <p
+                  style={{
+                    width: '515px',
+                    height: '30px',
+                    fontFamily: 'Inter',
+                    fontWeight: 400,
+                    fontSize: '20px',
+                    lineHeight: '150%',
+                    color: '#828282',
+                    margin: 0,
+                  }}
+                >
+                  {product.description || '제품 설명'}
+                </p>
+                <p
+                  style={{
+                    width: '515px',
+                    height: '30px',
+                    fontFamily: 'Inter',
+                    fontWeight: 500,
+                    fontSize: '20px',
+                    lineHeight: '150%',
+                    color: '#000000',
+                    margin: 0,
+                  }}
+                >
+                  ${product.price}
+                </p>
+              </div>
+            </div>
+          ))
+        )}
       </div>
 
       {/* 섹션 제목 - 첫 번째 */}
-      <h2
+      <div
         style={{
           position: 'absolute',
           width: '625px',
-          height: '58px',
           left: '80px',
           top: '2989px',
-          fontFamily: 'Inter',
-          fontStyle: 'normal',
-          fontWeight: 600,
-          fontSize: '48px',
-          lineHeight: '58px',
-          letterSpacing: '-0.02em',
-          color: '#000000',
-          margin: 0,
         }}
       >
-        섹션 제목
-      </h2>
+        <h2
+          style={{
+            width: '625px',
+            height: '58px',
+            fontFamily: 'Inter',
+            fontStyle: 'normal',
+            fontWeight: 600,
+            fontSize: '48px',
+            lineHeight: '58px',
+            letterSpacing: '-0.02em',
+            color: '#000000',
+            margin: 0,
+          }}
+        >
+          베스트 셀러
+        </h2>
+        
+        <p
+          style={{
+            width: '625px',
+            marginTop: '16px',
+            fontFamily: 'Inter',
+            fontStyle: 'normal',
+            fontWeight: 400,
+            fontSize: '20px',
+            lineHeight: '150%',
+            color: '#828282',
+            margin: '16px 0 0 0',
+          }}
+        >
+          가장 많은 사랑을 받는 인기 상품들을 만나보세요
+        </p>
+      </div>
 
       {/* List - 왼쪽 */}
       <div
@@ -785,7 +850,7 @@ export default function Shop() {
           height: '336px',
           left: '5.55%',
           right: '58.74%',
-          top: '3095px',
+          top: '3150px',
         }}
       >
         {/* Copy 1 */}
@@ -804,7 +869,6 @@ export default function Shop() {
             flexGrow: 0,
           }}
         >
-          <div style={{ width: '32px', height: '32px', background: '#454545', borderRadius: '50%' }} />
           <h3
             style={{
               width: '515px',
@@ -817,7 +881,7 @@ export default function Shop() {
               margin: 0,
             }}
           >
-            부제목
+            무선 이어폰
           </h3>
           <p
             style={{
@@ -831,7 +895,7 @@ export default function Shop() {
               margin: 0,
             }}
           >
-            하고 싶은 말을 적을 수 있는 본문 텍스트. 요점, 인용구, 일화 또는 아주 짧은 이야기를 추가하세요.
+            프리미엄 사운드와 노이즈 캔슬링 기능의 최신 무선 이어폰입니다.
           </p>
         </div>
 
@@ -851,7 +915,6 @@ export default function Shop() {
             flexGrow: 0,
           }}
         >
-          <div style={{ width: '32px', height: '32px', background: '#454545', borderRadius: '50%' }} />
           <h3
             style={{
               width: '515px',
@@ -864,7 +927,7 @@ export default function Shop() {
               margin: 0,
             }}
           >
-            부제목
+            스마트워치
           </h3>
           <p
             style={{
@@ -878,7 +941,7 @@ export default function Shop() {
               margin: 0,
             }}
           >
-            주장하고자 하는 내용을 적을 수 있는 본문 텍스트. 요점, 인용구, 일화 또는 아주 짧은 이야기를 추가하세요.
+            건강 관리와 운동 트래킹을 한 번에, 스타일리시한 스마트워치입니다.
           </p>
         </div>
       </div>
@@ -895,7 +958,7 @@ export default function Shop() {
           height: '336px',
           left: '58.6%',
           right: '5.69%',
-          top: '3095px',
+          top: '3150px',
         }}
       >
         {/* Copy 1 */}
@@ -914,7 +977,6 @@ export default function Shop() {
             flexGrow: 0,
           }}
         >
-          <div style={{ width: '32px', height: '32px', background: '#454545', borderRadius: '50%' }} />
           <h3
             style={{
               width: '513px',
@@ -927,7 +989,7 @@ export default function Shop() {
               margin: 0,
             }}
           >
-            부제목
+            프리미엄 노트북
           </h3>
           <p
             style={{
@@ -941,7 +1003,7 @@ export default function Shop() {
               margin: 0,
             }}
           >
-            제안하고 싶은 내용을 적을 수 있는 본문 텍스트. 요점, 인용구, 일화 또는 아주 짧은 이야기를 추가하세요.
+            강력한 성능과 슬림한 디자인을 갖춘 최신 노트북으로 작업 효율을 높이세요.
           </p>
         </div>
 
@@ -961,7 +1023,6 @@ export default function Shop() {
             flexGrow: 0,
           }}
         >
-          <div style={{ width: '32px', height: '32px', background: '#454545', borderRadius: '50%' }} />
           <h3
             style={{
               width: '513px',
@@ -974,7 +1035,7 @@ export default function Shop() {
               margin: 0,
             }}
           >
-            부제목
+            스마트폰
           </h3>
           <p
             style={{
@@ -988,7 +1049,7 @@ export default function Shop() {
               margin: 0,
             }}
           >
-            입력하고자 하는 내용을 적을 수 있는 본문 텍스트. 요점, 인용구, 일화 또는 아주 짧은 이야기를 추가하세요.
+            최신 칩셋과 뛰어난 카메라 성능을 자랑하는 프리미엄 스마트폰입니다.
           </p>
         </div>
       </div>

@@ -47,7 +47,7 @@ export default function Home() {
             flexGrow: 0,
           }}
         >
-          랜딩 페이지 제목
+          프리미엄 라이프스타일의 시작
         </h1>
         <p
           style={{
@@ -68,7 +68,7 @@ export default function Home() {
             flexGrow: 0,
           }}
         >
-          상황을 설명하고, 웹사이트에 대한 추가 정보를 공유하며, 사람들이 계속 스크롤하도록 흥미를 유발하는 부제목.
+          당신의 일상을 더욱 특별하게 만들어줄 최고의 제품을 만나보세요. 품질과 디자인의 완벽한 조화를 경험하실 수 있습니다.
         </p>
       </div>
 
@@ -114,7 +114,7 @@ export default function Home() {
           margin: 0,
         }}
       >
-        섹션 제목
+        왜 우리를 선택해야 할까요?
       </h2>
 
       {/* Cards Section */}
@@ -205,7 +205,7 @@ export default function Home() {
                   flexGrow: 0,
                 }}
               >
-                부제목
+                {i === 0 ? '프리미엄 품질' : i === 1 ? '빠른 배송' : '고객 만족'}
               </h3>
               <p
                 style={{
@@ -227,10 +227,10 @@ export default function Home() {
                 }}
               >
                 {i === 0
-                  ? '부제목에 넣고 싶은 내용을 추가하는 본문 텍스트.'
+                  ? '엄선된 최고급 소재로 만들어진 제품만을 제공합니다.'
                   : i === 1
-                  ? '요점에 추가하고 싶은 내용을 적을 수 있는 본문 텍스트.'
-                  : '더 공유하고 싶은 내용을 적을 수 있는 본문 텍스트.'}
+                  ? '주문 후 2-3일 내 빠르고 안전하게 배송해드립니다.'
+                  : '100% 고객 만족을 위해 최선을 다하고 있습니다.'}
               </p>
             </div>
           </div>
@@ -254,7 +254,7 @@ export default function Home() {
           margin: 0,
         }}
       >
-        섹션 제목
+        우리의 약속
       </h2>
 
       {/* Text Section */}
@@ -294,7 +294,7 @@ export default function Home() {
                 margin: 0,
               }}
             >
-              부제목
+              {i === 1 ? '정직한 가격' : i === 2 ? '친환경 포장' : '평생 A/S'}
             </h3>
             <p
               style={{
@@ -307,10 +307,10 @@ export default function Home() {
               }}
             >
               {i === 1
-                ? '요점에 추가하고 싶은 내용을 적을 수 있는 본문 텍스트.'
+                ? '중간 유통 마진을 최소화하여 합리적인 가격을 제공합니다.'
                 : i === 2
-                ? '하고 싶은 말을 적을 수 있는 본문 텍스트. 요점, 인용문, 일화를 추가해 보세요.'
-                : '요점에 추가하고 싶은 내용을 적을 수 있는 본문 텍스트. 세부 정보, 설명, 맥락을 제공합니다.'}
+                ? '지구를 생각하는 마음으로 친환경 소재로 포장합니다.'
+                : '구매하신 제품은 평생 무상 A/S를 제공해드립니다.'}
             </p>
           </div>
         ))}
@@ -371,7 +371,7 @@ export default function Home() {
             color: '#FFFFFF',
           }}
         >
-          버튼
+          쇼핑하기
         </button>
         <button
           style={{
@@ -391,7 +391,7 @@ export default function Home() {
             color: '#000000',
           }}
         >
-          보조 버튼
+          더 알아보기
         </button>
       </div>
 
@@ -413,7 +413,7 @@ export default function Home() {
           margin: 0,
         }}
       >
-        섹션 제목
+        인기 카테고리
       </h2>
 
       {/* Cards Section 2 */}
@@ -503,7 +503,7 @@ export default function Home() {
                   flexGrow: 0,
                 }}
               >
-                부제목
+                {i === 0 ? '라이프스타일' : '테크 & 가전'}
               </h3>
               <p
                 style={{
@@ -524,8 +524,8 @@ export default function Home() {
                 }}
               >
                 {i === 0
-                  ? '부제목에 넣고 싶은 내용을 추가하는 본문 텍스트.'
-                  : '요점에 추가하고 싶은 내용을 적을 수 있는 본문 텍스트.'}
+                  ? '일상을 더욱 풍요롭게 만들어줄 감각적인 제품들'
+                  : '최신 기술이 담긴 혁신적인 가전제품을 만나보세요'}
               </p>
             </div>
           </div>
@@ -550,7 +550,7 @@ export default function Home() {
           margin: 0,
         }}
       >
-        섹션 제목
+        고객 후기
       </h2>
 
       {/* Customer Quotes */}
@@ -568,7 +568,7 @@ export default function Home() {
           top: '3963px',
         }}
       >
-        {['"훌륭한 칭찬 한마디"', '"환상적인 피드백"', '"진정으로 빛나는 리뷰"'].map((quote, i) => (
+        {['"품질이 정말 최고예요!"', '"배송도 빠르고 만족스러워요"', '"가격 대비 너무 훌륭합니다"'].map((quote, i) => (
           <div
             key={i}
             style={{
@@ -626,7 +626,11 @@ export default function Home() {
                 style={{
                   width: '45px',
                   height: '45px',
-                  background: '#D9D9D9',
+                  background: i === 0 
+                    ? 'url(/profile1.jpg) center/cover, #D9D9D9'
+                    : i === 1
+                    ? 'url(/profile2.jpg) center/cover, #D9D9D9'
+                    : 'url(/profile3.jpg) center/cover, #D9D9D9',
                   borderRadius: '50%',
                   flex: 'none',
                   order: 0,
@@ -636,55 +640,41 @@ export default function Home() {
               <div
                 style={{
                   display: 'flex',
-                  flexDirection: 'column',
-                  alignItems: 'flex-start',
+                  flexDirection: 'row',
+                  alignItems: 'center',
                   padding: '0px',
-                  gap: '2px',
-                  width: '30px',
-                  height: '50px',
+                  gap: '8px',
                   flex: 'none',
                   order: 1,
                   flexGrow: 0,
                 }}
               >
                 <div
-                  style={{
-                    width: '30px',
-                    height: '24px',
-                    fontFamily: 'Inter',
-                    fontStyle: 'normal',
-                    fontWeight: 500,
-                    fontSize: '16px',
-                    lineHeight: '150%',
-                    display: 'flex',
-                    alignItems: 'center',
-                    color: '#000000',
-                    flex: 'none',
-                    order: 0,
-                    flexGrow: 0,
-                  }}
-                >
-                  이름
-                </div>
-                <div
-                  style={{
-                    width: '30px',
-                    height: '24px',
-                    fontFamily: 'Inter',
-                    fontStyle: 'normal',
-                    fontWeight: 500,
-                    fontSize: '16px',
-                    lineHeight: '150%',
-                    display: 'flex',
-                    alignItems: 'center',
-                    color: '#828282',
-                    flex: 'none',
-                    order: 1,
-                    flexGrow: 0,
-                  }}
-                >
-                  설명
-                </div>
+                style={{
+                  fontFamily: 'Inter',
+                  fontStyle: 'normal',
+                  fontWeight: 500,
+                  fontSize: '16px',
+                  lineHeight: '150%',
+                  color: '#000000',
+                  whiteSpace: 'nowrap',
+                }}
+              >
+                {i === 0 ? '김민지' : i === 1 ? '이준호' : '박서연'}
+              </div>
+              <div
+                style={{
+                  fontFamily: 'Inter',
+                  fontStyle: 'normal',
+                  fontWeight: 500,
+                  fontSize: '16px',
+                  lineHeight: '150%',
+                  color: '#828282',
+                  whiteSpace: 'nowrap',
+                }}
+              >
+                {i === 0 ? '단골고객' : i === 1 ? '재구매 고객' : 'VIP 회원'}
+              </div>
               </div>
             </div>
           </div>
@@ -719,7 +709,7 @@ export default function Home() {
             margin: 0,
           }}
         >
-          섹션 제목
+          지금 바로 시작하세요
         </h2>
         <div
           style={{
@@ -772,7 +762,7 @@ export default function Home() {
                 flexGrow: 0,
               }}
             >
-              버튼
+              구매하기
             </span>
           </button>
           <button
@@ -811,7 +801,7 @@ export default function Home() {
                 flexGrow: 0,
               }}
             >
-              보조 버튼
+              문의하기
             </span>
           </button>
         </div>

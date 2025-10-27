@@ -1,7 +1,74 @@
+'use client';
+
+import { useEffect, useState } from 'react';
+import { createClient } from '@supabase/supabase-js';
 import Navigation from '../components/Navigation';
 import Footer from '../components/Footer';
 
+const supabase = createClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL!,
+  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+);
+
+interface Article {
+  id: string;
+  title: string;
+  subtitle: string;
+  content: string;
+  author: string;
+  image_url: string;
+}
+
 export default function Article() {
+  const [mainArticle, setMainArticle] = useState<Article>({
+    id: '1',
+    title: '리스트몰의 새로운 제품 라인업',
+    subtitle: '최신 트렌드를 반영한 프리미엄 제품들을 소개합니다.\n고객님의 라이프스타일을 한층 더 업그레이드할 기회를 만나보세요.',
+    content: 'Welcome to our latest product showcase. We are excited to present our newest collection featuring cutting-edge technology and innovative design. Each product has been carefully selected to meet the highest standards of quality and functionality.\n\nOur commitment to excellence ensures that every item in our store represents the perfect blend of style, performance, and value. Discover products that will transform your everyday life and elevate your experience.',
+    author: '리스트몰 에디터',
+    image_url: '/Image (12).png'
+  });
+  const [relatedArticles, setRelatedArticles] = useState<Article[]>([
+    { id: '1', title: '스마트 홈 가전 트렌드', subtitle: '', content: '', author: '테크 리뷰어', image_url: '/Image (15).png' },
+    { id: '2', title: '프리미엄 제품 선택 가이드', subtitle: '', content: '', author: '쇼핑 큐레이터', image_url: '/Image (16).png' },
+    { id: '3', title: '2024 베스트 제품 TOP 10', subtitle: '', content: '', author: '상품 전문가', image_url: '/Image (17).png' },
+  ]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    loadArticles();
+  }, []);
+
+  async function loadArticles() {
+    setLoading(true);
+    
+    // 메인 기사 1개 가져오기 (가장 최근 기사)
+    const { data: main } = await supabase
+      .from('articles')
+      .select('*')
+      .order('created_at', { ascending: false })
+      .limit(1)
+      .single();
+    
+    // 관련 기사 3개 가져오기
+    const { data: related } = await supabase
+      .from('articles')
+      .select('*')
+      .order('created_at', { ascending: false })
+      .limit(3);
+    
+    // 데이터가 있으면 업데이트
+    if (main) {
+      setMainArticle(main);
+    }
+    
+    if (related && related.length > 0) {
+      setRelatedArticles(related);
+    }
+    
+    setLoading(false);
+  }
+
   return (
     <div
       style={{
@@ -26,13 +93,13 @@ export default function Article() {
           position: 'absolute',
           height: '173px',
           left: '5.56%',
-          right: '43.54%',
+          right: '25%',
           top: '244px',
         }}
       >
         <h1
           style={{
-            width: '733px',
+            width: '100%',
             height: '77px',
             fontFamily: 'Inter',
             fontStyle: 'normal',
@@ -48,12 +115,12 @@ export default function Article() {
             flexGrow: 0,
           }}
         >
-          기사 또는 게시물 제목
+          {mainArticle.title}
         </h1>
 
         <p
           style={{
-            width: '733px',
+            width: '100%',
             height: '72px',
             fontFamily: 'Inter',
             fontStyle: 'normal',
@@ -68,9 +135,10 @@ export default function Article() {
             order: 1,
             alignSelf: 'stretch',
             flexGrow: 0,
+            whiteSpace: 'pre-line',
           }}
         >
-          상황을 설명하고, 작성자에 대한 추가 정보를 공유하며, 사람들이 계속 읽고 싶도록 흥미를 유발하는 부제목
+          {mainArticle.subtitle || '최신 트렌드를 반영한 프리미엄 제품들을 소개합니다.\n고객님의 라이프스타일을 한층 더 업그레이드할 기회를 만나보세요.'}
         </p>
       </div>
 
@@ -87,22 +155,36 @@ export default function Article() {
           backgroundColor: '#F7F7F7',
         }}
       >
-        <img 
-          src="/Image (12).png" 
-          alt="Article main"
-          style={{
-            width: '100%',
-            height: '100%',
-            objectFit: 'cover',
-          }}
-        />
+        {mainArticle.image_url ? (
+          <img 
+            src={mainArticle.image_url} 
+            alt="Article main"
+            style={{
+              width: '100%',
+              height: '100%',
+              objectFit: 'cover',
+            }}
+          />
+        ) : (
+          <div style={{ 
+            width: '100%', 
+            height: '100%', 
+            display: 'flex', 
+            alignItems: 'center', 
+            justifyContent: 'center',
+            color: '#999999',
+            fontFamily: 'Inter'
+          }}>
+            이미지 없음
+          </div>
+        )}
       </div>
 
       {/* Paragraph 1 */}
       <div
         style={{
           position: 'absolute',
-          height: '450px',
+          minHeight: '450px',
           left: '20.76%',
           right: '20.76%',
           top: '1227px',
@@ -114,10 +196,8 @@ export default function Article() {
           color: '#000000',
         }}
       >
-        <p style={{ margin: 0 }}>
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-          <br /><br />
-          Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.
+        <p style={{ margin: 0, whiteSpace: 'pre-wrap' }}>
+          {mainArticle.content || 'Welcome to our latest product showcase. We are excited to present our newest collection featuring cutting-edge technology and innovative design. Each product has been carefully selected to meet the highest standards of quality and functionality.\n\nOur commitment to excellence ensures that every item in our store represents the perfect blend of style, performance, and value. Discover products that will transform your everyday life and elevate your experience.'}
         </p>
       </div>
 
@@ -199,7 +279,7 @@ export default function Article() {
         }}
       >
         <p style={{ margin: 0 }}>
-          Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem.
+          Every product in our collection is backed by comprehensive warranty coverage and dedicated customer support. We believe in building lasting relationships with our customers through exceptional service and quality products. Experience the difference that premium shopping can make in your daily life.
         </p>
       </div>
 
@@ -220,7 +300,7 @@ export default function Article() {
           margin: 0,
         }}
       >
-        관련 기사 또는 게시물
+        추천 아티클
       </h2>
 
       {/* Cards */}
@@ -238,9 +318,9 @@ export default function Article() {
           top: '2755px',
         }}
       >
-        {[15, 16, 17].map((i, index) => (
+        {relatedArticles.map((article, index) => (
           <div
-            key={i}
+            key={article.id}
             style={{
               display: 'flex',
               flexDirection: 'column',
@@ -268,15 +348,29 @@ export default function Article() {
                 flexGrow: 1,
               }}
             >
-              <img 
-                src={`/Image (${i}).png`}
-                alt={`Related article ${index + 1}`}
-                style={{
-                  width: '100%',
-                  height: '100%',
-                  objectFit: 'cover',
-                }}
-              />
+              {article.image_url ? (
+                <img 
+                  src={article.image_url}
+                  alt={article.title}
+                  style={{
+                    width: '100%',
+                    height: '100%',
+                    objectFit: 'cover',
+                  }}
+                />
+              ) : (
+                <div style={{ 
+                  width: '100%', 
+                  height: '100%', 
+                  display: 'flex', 
+                  alignItems: 'center', 
+                  justifyContent: 'center',
+                  color: '#999999',
+                  fontFamily: 'Inter'
+                }}>
+                  이미지 없음
+                </div>
+              )}
             </div>
 
             {/* Copy */}
@@ -313,7 +407,7 @@ export default function Article() {
                   flexGrow: 0,
                 }}
               >
-                제목
+                {article.title}
               </h3>
               <p
                 style={{
@@ -334,7 +428,7 @@ export default function Article() {
                   flexGrow: 0,
                 }}
               >
-                작성자
+                {article.author || '작성자'}
               </p>
             </div>
           </div>
